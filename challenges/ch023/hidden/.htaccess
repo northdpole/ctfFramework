@@ -1,4 +1,0 @@
-AuthUserFile /opt/lampp/htdocs/GSoC/hackademic/challenges/ch023/hidden_key/.htpasswd
-AuthType Basic
-AuthName "Treasure Key"
-Require valid-user

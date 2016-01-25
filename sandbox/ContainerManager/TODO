@@ -1,0 +1,7 @@
+
+modify the vagrant driver to move the classifier functionality as methods
+
+add sandbox methods to call the new vagrant methods
+
+Add a comprehensive challenge xml and complete the challenge.xml parser
+Add tests

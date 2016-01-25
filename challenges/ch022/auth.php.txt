@@ -1,9 +1,0 @@
-<?php
-if(isset($_POST["password"]))
-{
-	if(!strcmp($password,$_POST["password"]))
-	{
-		//You are authenticated
-	}
-}
-?>

@@ -11,3 +11,4 @@ nbproject/
 composer.lock
 vendor/
 *.pyc
+virtualenv/
