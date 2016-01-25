@@ -1,4 +1,5 @@
 __MACOSX/*
+.idea/
 .project/
 *.patch
 config.inc.php
