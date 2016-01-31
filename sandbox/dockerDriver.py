@@ -3,6 +3,8 @@
 import json
 import random
 import socket
+from pprint import pprint
+
 from config import PROJECT_ROOT
 
 import logging
@@ -38,7 +40,9 @@ class DockerDriver(SandboxDriver):
         :param challenge_title: the title of the challenge, that's what the tag of the image
         :raise: TypeError
         """
+        pprint(type(self.sandbox_config))
         dockerfile_path = PROJECT_ROOT + self.challenge_path + self.sandbox_config.dockerfile_path
+        print(dockerfile_path)
         with open(dockerfile_path, 'r') as dockerfile:
             try:
                 result = [line for line in self.client.build(fileobj=dockerfile, forcerm=True, tag=challenge_title, )]

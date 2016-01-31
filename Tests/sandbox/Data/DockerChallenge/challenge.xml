@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<challenge>
+    <title>Example Template For Challenge .xml Files creation</title>
+    <author>
+	     Name or email or both
+    </author>
+    <category>In what category does your challenge belong?(Value used to make the admin's life easier)</category>
+    <description>
+	       text describing the scenario of the challenge(what the users are supposed to do and if there is any fictional story) will be presented to the users as is
+    </description>
+    <flags>
+		<flag>flags/flag1</flag>
+		<flag>flags/flag2</flag>
+	</flags>
+    <sandbox>
+      <type>docker</type><!-- By default(if you don't provide any directives) the platform will copy everything in the
+    challenge folder at the target's web root and expose port 80-->
+      <dockerfile_path>.</dockerfile_path>
+      </sandbox>
+</challenge>

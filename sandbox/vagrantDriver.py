@@ -30,7 +30,7 @@ class VagrantDriver(SandboxDriver):
         """
         Vagrant.box_add(box_name)
 
-    def __init__(self, box_name, box_id):
+    def __init__(self, (box_name, box_id)):
         """ init the challenge based on box_name in the directory named box_id
         Args:
             box_name (str): the name of box, ex ubuntu/trusty64

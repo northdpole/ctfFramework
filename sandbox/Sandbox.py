@@ -48,7 +48,7 @@ class Sandbox(object):
 
     """
     Parse the challenge.yml file and instantiate a new challenge object
-    NON USABLE YET
+    NOT USABLE YET
     ""
     def parse_challenge_yml(self):
         with open(self.challenge,'r') as doc:

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<challenge>
+    <title>Example Template For Challenge .xml Files creation</title>
+    <author>
+	     Name or email or both
+    </author>
+    <category>In what category does your challenge belong?(Value used to make the admin's life easier)</category>
+    <description>
+	       text describing the scenario of the challenge(what the users are supposed to do and if there is any fictional story) will be presented to the users as is
+    </description>
+    <flags>
+		<flag>flags/flag1</flag>
+		<flag>flags/flag2</flag>
+	</flags>
+    <sandbox><!-- If you don't add a container provider section the platform assumes your challenge
+      doesn't need sandboxing so it will happily copy all your challenge files to the challenge/ folder and execute them
+      using the server's php installation this is useful for challenges that only serve files to be executed by the user
+    such as forensics, cryptanalysis e.t.c.-->
+        one of vagrant,docker
+        Note:
+          Bellow you can find examples of all provider directives. Also, for each kind of provider there should be
+           example/template challenges provided in the repository
+          * Docker means that the challenge contains a service which should run inside a docker container.
+              Should you choose docker you can either provide a folder which will be copied in /var/www/ of the target container
+              or you can provide a Dockerfile along with the challenge files which will be used to configure the container
+          * Vagrant means that the challenge will should be launched inside a virtual machine. In that case you can choose to
+    </sandbox>
+    <sandbox>
+      <type>docker</type><!-- By default(if you don't provide any directives) the platform will copy everything in the
+    challenge folder at the target's web root and expose port 80-->
+      <dockerfile_path>.</dockerfile_path>
+      </sandbox>
+</challenge>
