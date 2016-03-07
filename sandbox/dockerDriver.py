@@ -19,7 +19,7 @@ __author__ = "AnirudhAnand (a0xnirudh) < anirudh@init-labs.org >"
 class DockerDriver(SandboxDriver):
     """The Main Docker daemon class. This wil control the containers """
 
-    def __init__(self, challenge_path, host, sandbox_config, challenge_id, base_url="unix://var/run/docker.sock", ):
+    def __init__(self, challenge_path, host, sandbox_config, challenge_id, base_url=None):
         """
         Initialize a new docker instance
         :challenge_path: the path of the challenge relative to the project root
@@ -27,7 +27,7 @@ class DockerDriver(SandboxDriver):
         :param sandbox_config: the dictionary containing the sandbox section of the config file
         :return:
         """
-        self.client = Client(base_url=base_url)
+        self.client = Client(base_url=base_url,tls=True)
         self.timer = "hour"
         self.host = host
         self.sandbox_config = sandbox_config
@@ -40,16 +40,9 @@ class DockerDriver(SandboxDriver):
         :param challenge_title: the title of the challenge, that's what the tag of the image
         :raise: TypeError
         """
-        pprint(type(self.sandbox_config))
-        dockerfile_path = PROJECT_ROOT + self.challenge_path + self.sandbox_config.dockerfile_path
-        print(dockerfile_path)
-        with open(dockerfile_path, 'r') as dockerfile:
-            try:
-                result = [line for line in self.client.build(fileobj=dockerfile, forcerm=True, tag=challenge_title, )]
-                logging.info(result)
-            except TypeError:
-                logging.error(dockerfile_path + " doesn't exist or doesn't point to a docker file")
-                raise TypeError
+        dockerfile_path = self.challenge_path + "/"
+        result = [line for line in self.client.build(path=dockerfile_path, forcerm=True, tag=challenge_title, )]
+        logging.info(result)
 
     def launch(self):
         """
@@ -66,14 +59,18 @@ class DockerDriver(SandboxDriver):
 
         return port
 
+
     def list_containers(self):
         return json.dumps(self.client.containers())
+
 
     def kill_container(self):
         self.client.rremove_container(container=self.id, force=True)
 
+
     def list_images(self):
         return json.dumps(self.client.images())
+
 
     def __generate_port(self):
         """
@@ -85,54 +82,55 @@ class DockerDriver(SandboxDriver):
             port = random.randint(1500, 10000)
             result = sock.connect_ex((self.host, port))
             if result != 0:
-                sock.close(result)
+                sock.close()
                 return port
 
-    """ def auto_container_killer(self):
-            while True:
-                sleep(300)
-                container_list = self.client.containers()
-                for i in range(0, len(container_list)):
-                    temp = container_list[i].get("Status")
-                    flag = re.findall(self.timer, temp)
-                    if flag:
-                        self.kill_container(container_list[i].get("Id"))
-    """
 
-    """def create_socket(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        try:
-            s.bind((self.HOST, self.PORT))
-        except socket.error as msg:
-            print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-            sys.exit(1)
-        s.listen(10)
+""" def auto_container_killer(self):
         while True:
-            conn, addr = s.accept()
-            thread.start_new_thread(self.client_thread, (conn,))
+            sleep(300)
+            container_list = self.client.containers()
+            for i in range(0, len(container_list)):
+                temp = container_list[i].get("Status")
+                flag = re.findall(self.timer, temp)
+                if flag:
+                    self.kill_container(container_list[i].get("Id"))
+"""
 
-    def client_thread(self, conn):
-        while True:
-            data = conn.recv(1024)
+"""def create_socket(self):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        s.bind((self.HOST, self.PORT))
+    except socket.error as msg:
+        print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+        sys.exit(1)
+    s.listen(10)
+    while True:
+        conn, addr = s.accept()
+        thread.start_new_thread(self.client_thread, (conn,))
 
-            if 'launch' in str(data):
-                challenge = str(data).split(':')[1]
-                containers = self.launch(challenge)
-                conn.sendall(containers)
+def client_thread(self, conn):
+    while True:
+        data = conn.recv(1024)
 
-            if data == 'list_containers':
-                containers = self.list_containers()
-                conn.sendall(containers)
+        if 'launch' in str(data):
+            challenge = str(data).split(':')[1]
+            containers = self.launch(challenge)
+            conn.sendall(containers)
 
-            if 'kill_container' in str(data):
-                containerid = str(data).split(':')[1]
-                containerid = containerid.strip("\n")
-                try:
-                    containers = self.kill_container(containerid)
-                except (TypeError) as exception:
-                    pass
-                conn.close()
+        if data == 'list_containers':
+            containers = self.list_containers()
+            conn.sendall(containers)
 
-        conn.close()
+        if 'kill_container' in str(data):
+            containerid = str(data).split(':')[1]
+            containerid = containerid.strip("\n")
+            try:
+                containers = self.kill_container(containerid)
+            except (TypeError) as exception:
+                pass
+            conn.close()
+
+    conn.close()
 """
